@@ -193,9 +193,30 @@ section .data
 			add [.seed], cx
 			ret
 		.seed dw 0
-	
-	; --- includes ---
-	%include "graphic.inc"
+		
+	start_graphic_mode:
+			mov ax, 0a000h
+			mov es, ax
+			mov ah, 0
+			mov al, 13h
+			int 10h
+			ret
+			
+	; al = color index
+	; bx = row
+	; cx = col
+	pset:
+			pusha
+			xor dx, dx
+			push ax
+			mov ax, 320
+			mul bx
+			add ax, cx
+			mov bx, ax
+			pop ax
+			mov byte [es:bx], al
+			popa
+			ret
 	
 section .bss
 	points resw POINTS_COUNT * 2
